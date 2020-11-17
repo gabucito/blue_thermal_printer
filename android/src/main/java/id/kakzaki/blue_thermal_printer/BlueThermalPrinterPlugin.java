@@ -262,7 +262,7 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
         }
         break;
 
-      case "pdf417":
+      case "printPDF417code":
         if (arguments.containsKey("textToPDF417")) {
           String textToPDF417 = (String) arguments.get("textToPDF417");
           int width = (int) arguments.get("width");
