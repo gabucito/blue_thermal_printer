@@ -261,6 +261,18 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
           result.error("invalid_argument", "argument 'textToQR' not found", null);
         }
         break;
+
+      case "pdf417":
+        if (arguments.containsKey("textToPDF417")) {
+          String textToPDF417 = (String) arguments.get("textToPDF417");
+          int width = (int) arguments.get("width");
+          int height = (int) arguments.get("height");
+          int align = (int) arguments.get("align");
+          printPDF417code(result, textToPDF417, width, height, align);
+        } else {
+          result.error("invalid_argument", "argument 'textToPDF417' not found", null);
+        }
+        break;
       case "printLeftRight":
         if (arguments.containsKey("string1")) {
           String string1 = (String) arguments.get("string1");
@@ -620,6 +632,44 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
           break;
       }
       BitMatrix bitMatrix = multiFormatWriter.encode(textToQR, BarcodeFormat.QR_CODE, width, height);
+      BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+      Bitmap bmp = barcodeEncoder.createBitmap(bitMatrix);
+
+      if (bmp != null) {
+        byte[] command = Utils.decodeBitmap(bmp);
+        THREAD.write(command);
+      } else {
+        Log.e("Print Photo error", "the file isn't exists");
+      }
+      result.success(true);
+    } catch (Exception ex) {
+      Log.e(TAG, ex.getMessage(), ex);
+      result.error("write_error", ex.getMessage(), exceptionToString(ex));
+    }
+  }
+
+  private void printPDF417code(Result result, String textToPDF417, int width, int height, int align) {
+    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+    if (THREAD == null) {
+      result.error("write_error", "not connected", null);
+      return;
+    }
+    try {
+      switch (align) {
+        case 0:
+          // left align
+          THREAD.write(PrinterCommands.ESC_ALIGN_LEFT);
+          break;
+        case 1:
+          // center align
+          THREAD.write(PrinterCommands.ESC_ALIGN_CENTER);
+          break;
+        case 2:
+          // right align
+          THREAD.write(PrinterCommands.ESC_ALIGN_RIGHT);
+          break;
+      }
+      BitMatrix bitMatrix = multiFormatWriter.encode(textToPDF417, BarcodeFormat.PDF_417, width, height);
       BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
       Bitmap bmp = barcodeEncoder.createBitmap(bitMatrix);
 
