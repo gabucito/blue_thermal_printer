@@ -43,7 +43,7 @@ import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.pdf417.PDF417Writer;
-import com.google.zxing.pdf417.encoder;
+import com.google.zxing.pdf417.encoder.Dimensions;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.EncodeHintType;
