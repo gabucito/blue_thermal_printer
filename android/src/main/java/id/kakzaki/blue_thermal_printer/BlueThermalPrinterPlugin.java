@@ -42,6 +42,8 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.pdf417.PDF417Writer;
+import com.google.zxing.pdf417.encoder;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.EncodeHintType;
@@ -272,7 +274,11 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
           int compact = (int) arguments.get("compact");
           int error = (int) arguments.get("error");
           int margin = (int) arguments.get("margin");
-          printPDF417code(result, textToPDF417, width, height, align, compact, error, margin);
+          int maxc = (int) arguments.get("maxc");
+          int minc = (int) arguments.get("minc");
+          int maxr = (int) arguments.get("maxr");
+          int minr = (int) arguments.get("minr");
+          printPDF417code(result, textToPDF417, width, height, align, compact, error, margin, maxc, minc, maxr, minr);
         } else {
           result.error("invalid_argument", "argument 'textToPDF417' not found", null);
         }
@@ -652,9 +658,9 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
     }
   }
 
-  private void printPDF417code(Result result, String textToPDF417, int width, int height, int align, int compact, int error, int margin) {
-    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-//    PDF417Writer writer = new PDF417Writer();
+  private void printPDF417code(Result result, String textToPDF417, int width, int height, int align, int compact, int error, int margin, int maxc, int minc, int maxr, int minr) {
+//    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+    PDF417Writer writer = new PDF417Writer();
 
     if (THREAD == null) {
       result.error("write_error", "not connected", null);
@@ -680,6 +686,7 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
       hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
       hints.put(EncodeHintType.ERROR_CORRECTION, error);
       hints.put(EncodeHintType.MARGIN, margin);
+      hints.put(EncodeHintType.PDF417_DIMENSIONS, Dimensions());
       if(compact == 1){
         hints.put(EncodeHintType.PDF417_COMPACT, true);
         hints.put(EncodeHintType.PDF417_COMPACTION, "AUTO");
@@ -687,8 +694,8 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
         hints.put(EncodeHintType.PDF417_COMPACT, false);
       }
 
-//      BitMatrix bitMatrix = writer.encode(textToPDF417, BarcodeFormat.PDF_417, width, height, hints);
-      BitMatrix bitMatrix = multiFormatWriter.encode(textToPDF417, BarcodeFormat.PDF_417, width, height, hints);
+      BitMatrix bitMatrix = writer.encode(textToPDF417, BarcodeFormat.PDF_417, width, height, hints);
+//      BitMatrix bitMatrix = multiFormatWriter.encode(textToPDF417, BarcodeFormat.PDF_417, width, height, hints);
       BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
       Bitmap bmp = barcodeEncoder.createBitmap(bitMatrix);
 
