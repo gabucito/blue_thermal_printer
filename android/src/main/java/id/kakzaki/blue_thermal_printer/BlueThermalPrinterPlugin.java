@@ -649,7 +649,9 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
   }
 
   private void printPDF417code(Result result, String textToPDF417, int width, int height, int align) {
-    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+//    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+    PDF417Writer writer = new PDF417Writer();
+
     if (THREAD == null) {
       result.error("write_error", "not connected", null);
       return;
@@ -669,7 +671,16 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
           THREAD.write(PrinterCommands.ESC_ALIGN_RIGHT);
           break;
       }
-      BitMatrix bitMatrix = multiFormatWriter.encode(textToPDF417, BarcodeFormat.PDF_417, width, height);
+
+      HashMap hints = new HashMap();
+      hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+      hints.put(EncodeHintType.ERROR_CORRECTION, 0);
+      hints.put(EncodeHintType.MARGIN, 0);
+      hints.put(EncodeHintType.PDF417_COMPACT, true);
+      hints.put(EncodeHintType.PDF417_COMPACTION, Compaction.AUTO);
+
+      BitMatrix bitMatrix = writer.encode(textToPDF417, BarcodeFormat.PDF_417, width, height, hints);
+//      BitMatrix bitMatrix = multiFormatWriter.encode(textToPDF417, BarcodeFormat.PDF_417, width, height);
       BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
       Bitmap bmp = barcodeEncoder.createBitmap(bitMatrix);
 
