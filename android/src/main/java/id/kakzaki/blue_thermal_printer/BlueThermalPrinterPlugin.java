@@ -269,7 +269,9 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
           int width = (int) arguments.get("width");
           int height = (int) arguments.get("height");
           int align = (int) arguments.get("align");
-          printPDF417code(result, textToPDF417, width, height, align);
+          boolean compact = (boolean) arguments.get("compact");
+          int error = (int) arguments.get("error");
+          printPDF417code(result, textToPDF417, width, height, align, compact, error);
         } else {
           result.error("invalid_argument", "argument 'textToPDF417' not found", null);
         }
@@ -649,7 +651,7 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
     }
   }
 
-  private void printPDF417code(Result result, String textToPDF417, int width, int height, int align) {
+  private void printPDF417code(Result result, String textToPDF417, int width, int height, int align, boolean compact, int error) {
     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 //    PDF417Writer writer = new PDF417Writer();
 
@@ -675,10 +677,14 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
 
       HashMap hints = new HashMap();
       hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-      hints.put(EncodeHintType.ERROR_CORRECTION, 0);
+      hints.put(EncodeHintType.ERROR_CORRECTION, error);
       hints.put(EncodeHintType.MARGIN, 0);
-      hints.put(EncodeHintType.PDF417_COMPACT, true);
-      hints.put(EncodeHintType.PDF417_COMPACTION, "AUTO");
+      if(compact){
+        hints.put(EncodeHintType.PDF417_COMPACT, true);
+        hints.put(EncodeHintType.PDF417_COMPACTION, "AUTO");
+      } else {
+        hints.put(EncodeHintType.PDF417_COMPACT, false);
+      }
 
 //      BitMatrix bitMatrix = writer.encode(textToPDF417, BarcodeFormat.PDF_417, width, height, hints);
       BitMatrix bitMatrix = multiFormatWriter.encode(textToPDF417, BarcodeFormat.PDF_417, width, height, hints);
