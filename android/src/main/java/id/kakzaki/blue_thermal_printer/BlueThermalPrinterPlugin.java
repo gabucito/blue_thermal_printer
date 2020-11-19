@@ -271,7 +271,8 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
           int align = (int) arguments.get("align");
           int compact = (int) arguments.get("compact");
           int error = (int) arguments.get("error");
-          printPDF417code(result, textToPDF417, width, height, align, compact, error);
+          int margin = (int) arguments.get("margin");
+          printPDF417code(result, textToPDF417, width, height, align, compact, error, margin);
         } else {
           result.error("invalid_argument", "argument 'textToPDF417' not found", null);
         }
