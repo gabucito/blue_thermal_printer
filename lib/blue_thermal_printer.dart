@@ -87,14 +87,15 @@ class BlueThermalPrinter {
           {'textToQR': textToQR, 'width': width, 'height': height, 'align': align});
 
   Future<dynamic> printPDF417code(String textToPDF417, int width, int height, int align,
-          int compact, int error) =>
+          int compact, int error, int margin) =>
       _channel.invokeMethod('printPDF417code', {
         'textToPDF417': textToPDF417,
         'width': width,
         'height': height,
         'align': align,
         'compact': compact,
-        'error': error
+        'error': error,
+        'margin': margin
       });
 
   Future<dynamic> printLeftRight(String string1, String string2, int size,

@@ -651,7 +651,7 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
     }
   }
 
-  private void printPDF417code(Result result, String textToPDF417, int width, int height, int align, int compact, int error) {
+  private void printPDF417code(Result result, String textToPDF417, int width, int height, int align, int compact, int error, int margin) {
     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 //    PDF417Writer writer = new PDF417Writer();
 
@@ -678,7 +678,7 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
       HashMap hints = new HashMap();
       hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
       hints.put(EncodeHintType.ERROR_CORRECTION, error);
-      hints.put(EncodeHintType.MARGIN, 0);
+      hints.put(EncodeHintType.MARGIN, margin);
       if(compact == 1){
         hints.put(EncodeHintType.PDF417_COMPACT, true);
         hints.put(EncodeHintType.PDF417_COMPACTION, "AUTO");
