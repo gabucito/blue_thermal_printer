@@ -686,7 +686,7 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
       hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
       hints.put(EncodeHintType.ERROR_CORRECTION, error);
       hints.put(EncodeHintType.MARGIN, margin);
-      hints.put(EncodeHintType.PDF417_DIMENSIONS, Dimensions(minc, maxc, minr, maxr));
+      hints.put(EncodeHintType.PDF417_DIMENSIONS, new Dimensions(minc, maxc, minr, maxr));
       if(compact == 1){
         hints.put(EncodeHintType.PDF417_COMPACT, true);
         hints.put(EncodeHintType.PDF417_COMPACTION, "AUTO");
