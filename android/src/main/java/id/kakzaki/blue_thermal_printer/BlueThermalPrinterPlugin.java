@@ -274,11 +274,11 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
           int compact = (int) arguments.get("compact");
           int error = (int) arguments.get("error");
           int margin = (int) arguments.get("margin");
-          int maxc = (int) arguments.get("maxc");
           int minc = (int) arguments.get("minc");
-          int maxr = (int) arguments.get("maxr");
+          int maxc = (int) arguments.get("maxc");
           int minr = (int) arguments.get("minr");
-          printPDF417code(result, textToPDF417, width, height, align, compact, error, margin, maxc, minc, maxr, minr);
+          int maxr = (int) arguments.get("maxr");
+          printPDF417code(result, textToPDF417, width, height, align, compact, error, margin, minc, maxc, minr, maxr);
         } else {
           result.error("invalid_argument", "argument 'textToPDF417' not found", null);
         }
@@ -658,7 +658,7 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
     }
   }
 
-  private void printPDF417code(Result result, String textToPDF417, int width, int height, int align, int compact, int error, int margin, int maxc, int minc, int maxr, int minr) {
+  private void printPDF417code(Result result, String textToPDF417, int width, int height, int align, int compact, int error, int margin, int minc, int maxc, int minr, int maxr) {
 //    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
     PDF417Writer writer = new PDF417Writer();
 
@@ -686,7 +686,7 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
       hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
       hints.put(EncodeHintType.ERROR_CORRECTION, error);
       hints.put(EncodeHintType.MARGIN, margin);
-      hints.put(EncodeHintType.PDF417_DIMENSIONS, Dimensions());
+      hints.put(EncodeHintType.PDF417_DIMENSIONS, Dimensions(minc, maxc, minr, maxr));
       if(compact == 1){
         hints.put(EncodeHintType.PDF417_COMPACT, true);
         hints.put(EncodeHintType.PDF417_COMPACTION, "AUTO");
