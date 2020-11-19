@@ -678,7 +678,7 @@ public class BlueThermalPrinterPlugin implements MethodCallHandler, RequestPermi
       hints.put(EncodeHintType.ERROR_CORRECTION, 0);
       hints.put(EncodeHintType.MARGIN, 0);
       hints.put(EncodeHintType.PDF417_COMPACT, true);
-      hints.put(EncodeHintType.PDF417_COMPACTION, Compaction.AUTO);
+      hints.put(EncodeHintType.PDF417_COMPACTION, 'AUTO');
 
 //      BitMatrix bitMatrix = writer.encode(textToPDF417, BarcodeFormat.PDF_417, width, height, hints);
       BitMatrix bitMatrix = multiFormatWriter.encode(textToPDF417, BarcodeFormat.PDF_417, width, height, hints);
